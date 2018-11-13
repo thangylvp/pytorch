@@ -162,6 +162,13 @@ imshow(out, title=[class_names[x] for x in classes])
 
 
 model_ft = models.resnet18(pretrained=True)
+
+# freeze all the network except the final layer
+for param in model_ft.parameters():
+    param.requires_grad = False
+#----------------------------------------------
+
+
 num_ftrs = model_ft.fc.in_features
 model_ft.fc = nn.Linear(num_ftrs, 2)
 
