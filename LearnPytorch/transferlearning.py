@@ -187,3 +187,5 @@ model_ft = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler,
                        num_epochs=25)
 
 visualize_model(model_ft)
+
+torch.save(model_ft.state_dict(), 'data/model/resnet18_1.pt')
