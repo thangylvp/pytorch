@@ -6,7 +6,7 @@ int main() {
 	torch::Tensor tensor = torch::rand({2, 3});
 	std::cout << tensor << std::endl;
 
-	std::string model_path = "/home/thangnv/Github/faster-rcnn.pytorch/models/vgg16/pascal_voc/faster_rcnn_1_6_10021.pth";
+	std::string model_path = "../../data/model/model.pt";
 
 	std::ifstream is (model_path, std::ifstream::binary);
     std::shared_ptr<torch::jit::script::Module> module = torch::jit::load(is);
