@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
-project(example-app)
+project(smoke_libtorch)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set (CMAKE_PREFIX_PATH "/home/thangnv/Github/libtorch")
+
 find_package(Torch REQUIRED)
+find_package(OpenCV 4.0 REQUIRED)
 
 add_executable(example-app src/example.cpp)
-target_link_libraries(example-app "${TORCH_LIBRARIES}")
-set_property(TARGET example-app PROPERTY CXX_STANDARD 11)
+target_link_libraries(example-app ${TORCH_LIBRARIES} ${OpenCV_LIBS})
+
