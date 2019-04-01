@@ -15,7 +15,7 @@ bool LoadImage(std::string file_name, cv::Mat &image) {
 	if (image.empty() || !image.data) {
 		return false;
 	}
-	cv::imshow("src", image);
+	// cv::imshow("src", image);
   	cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
 	std::cout << "== image size: " << image.size() << " ==" << std::endl;
 
@@ -59,15 +59,17 @@ int main() {
   	std::cout << "ok\n";
 
 	std::string filePath = "../../data/Smoke/val/pos/";
-	cv::Mat srcImg;
+	cv::Mat srcImg, tmpImg;
 
 	std::vector<cv::String> fn;
     cv::glob(filePath,fn,true);
 
 	double totalTime = 0;
+	int countSmoke = 0, countNon = 0;
 	for (size_t k=0; k<fn.size(); ++k) {
 		std::cerr << fn[k] << std::endl;
 		if (LoadImage(fn[k], srcImg)) {
+			tmpImg = cv::imread(fn[k]);
 			std::cerr << "Done load Image " << std::endl;
 			auto input_tensor = torch::from_blob(srcImg.data, {1, kIMAGE_SIZE, kIMAGE_SIZE, kCHANNELS});
 			input_tensor = input_tensor.permute({0, 3, 1, 2});
@@ -100,6 +102,12 @@ int main() {
 				std::cout << "    Label:  " << labels[idx] << std::endl;
 				std::cout << "    With Probability:  "
 						<< softmaxs[i].item<float>() * 100.0f << "%" << std::endl;
+
+				if (idx == 1) countSmoke++; else {
+					countNon++;
+					cv::imshow("tmp", tmpImg);
+					cv::waitKey();
+				}
 			}
 			/*
 			auto idx = indexs[0].item<int>();
@@ -107,9 +115,10 @@ int main() {
 			std::cout << "    Label:  " << labels[idx] << std::endl;
 			std::cout << "    With Probability:  " << softmaxs[0].item<float>() * 100.0f << "%" << std::endl;
 			*/
-			cv::waitKey();
+			// cv::waitKey();
 		}
 	}
+	std::cerr << "Smoke : " << countSmoke << " , Not Smoke : " << countNon << std::endl;
 	/*
 	std::vector<torch::jit::IValue> inputs;
 #ifdef CUDA

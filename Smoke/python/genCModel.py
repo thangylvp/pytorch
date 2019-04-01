@@ -18,7 +18,7 @@ num_ftrs = model_ft.fc.in_features
 model_ft.fc = nn.Linear(num_ftrs, 2)
 
 
-model_ft.load_state_dict(torch.load('data/model/resnet18_1.pt'))
+model_ft.load_state_dict(torch.load('../data/model/resnet18_1.pt'))
 model_ft.eval()
 
 # An example input you would normally provide to your model's forward() method.
@@ -26,4 +26,4 @@ example = torch.rand(1, 3, 224, 224)
 
 # Use torch.jit.trace to generate a torch.jit.ScriptModule via tracing.
 traced_script_module = torch.jit.trace(model_ft, example)
-traced_script_module.save("data/model/model.pt")
+traced_script_module.save("../data/model/model.pt")
