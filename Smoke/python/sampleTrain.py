@@ -90,8 +90,8 @@ def imshow(inp, title=None):
     plt.imshow(inp)
     if title is not None:
         plt.title(title)
-    plt.pause(5)  # pause a bit so that plots are updated
-    # plt.show()
+    plt.pause(10)  # pause a bit so that plots are updated
+    plt.show()
 
 def visualize_model(model, num_images=6):
     was_training = model.training
