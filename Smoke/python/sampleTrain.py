@@ -90,7 +90,7 @@ def imshow(inp, title=None):
     plt.imshow(inp)
     if title is not None:
         plt.title(title)
-    plt.pause(10)  # pause a bit so that plots are updated
+    plt.pause(1)  # pause a bit so that plots are updated
     plt.show()
 
 def visualize_model(model, num_images=6):
@@ -122,13 +122,13 @@ def visualize_model(model, num_images=6):
 
 data_transforms = {
     'train': transforms.Compose([
-        transforms.RandomResizedCrop(224),
+        transforms.RandomResizedCrop(256),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     'val': transforms.Compose([
-        transforms.Resize(224),
+        transforms.Resize(256),
         transforms.CenterCrop(224),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -136,12 +136,12 @@ data_transforms = {
 }
 
 
-data_dir = '../data/Smoke'
+data_dir = '/home/citlab/SmokeData/data/'
 image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                                           data_transforms[x])
                   for x in ['train', 'val']}
-dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=8,
-                                             shuffle=True, num_workers=4)
+dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=16,
+                                             shuffle=True, num_workers=8)
               for x in ['train', 'val']}
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
 class_names = image_datasets['train'].classes
@@ -156,7 +156,7 @@ out = torchvision.utils.make_grid(inputs)
 
 imshow(out, title=[class_names[x] for x in classes])
 
-model_ft = models.resnet18(pretrained=True)
+model_ft = models.inception_v3(pretrained=True)
 
 for param in model_ft.parameters():
     param.requires_grad = False
@@ -169,15 +169,15 @@ model_ft = model_ft.to(device)
 criterion = nn.CrossEntropyLoss()
 
 # Observe that all parameters are being optimized
-optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.4)
+optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.6)
 
 # Decay LR by a factor of 0.1 every 7 epochs
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.1)
 
 
 model_ft = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler,
                        num_epochs=50)
 
-visualize_model(model_ft)
+# visualize_model(model_ft)
 
-torch.save(model_ft.state_dict(), '../data/model/resnet18_1.pt')
+torch.save(model_ft.state_dict(), '../data/model/inception_v3.pt')
