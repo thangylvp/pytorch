@@ -70,7 +70,7 @@ for num in range(10):
     # cv2.imshow("tmp2", src2)
     # if (cv2.waitKey() == 'q') :
         # break
-    plt.title('RGB image')
+    # plt.title('RGB image')
     plt.imshow(src1)
     plt.show()
     # print(fileEnvir[id2], ' ', fileSmoke[x1])    
